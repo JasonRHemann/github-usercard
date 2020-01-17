@@ -2,12 +2,22 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+  const cards = document.querySelector('.cards')
+  axios.get('https://api.github.com/users/jasonrhemann')
+  .then (response => {
+    console.log(response);
+     cards.append(gitHubCard(response.data))
+  })
+  .catch(error => {
+    console.log (error);
+  })
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
 
    Skip to Step 3.
+   
 */
 
 /* Step 4: Pass the data received from Github into your function, 
@@ -24,7 +34,17 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['johngwells', 'austinhuisinga', 'krystalguzman'];
+followersArray.forEach(obj => { 
+axios.get(`https://api.github.com/users/${obj}`)
+.then (response => {
+  console.log(response);
+   cards.append(gitHubCard(response.data))
+})
+.catch(error => {
+  console.log (error);
+})
+})
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -43,8 +63,57 @@ const followersArray = [];
     <p>Bio: {users bio}</p>
   </div>
 </div>
-
 */
+
+function gitHubCard(obj){
+
+  //variables
+  const cardi = document.createElement('div')
+  const img = document.createElement('img')
+  const cardInfo = document.createElement('card-info')
+  const name = document.createElement('h3')
+  const username = document.createElement('p')
+  const location = document.createElement('p')
+  const profile = document.createElement('p')
+  const link = document.createElement('a')
+  const followers = document.createElement('p')
+  const following = document.createElement('p')
+  const bio = document.createElement('p')
+
+  //classes
+  cardi.classList.add('card')
+  cardInfo.classList.add('card-info')
+  name.classList.add('name')
+  username.classList.add('username')
+
+ 
+
+  //content
+  img.setAttribute('src', obj.avatar_url)
+  name.textContent = obj.name;
+  username.textContent = obj.login
+  location.textContent = `Location: ${obj.location}`
+  profile.textContent = 'Profile: ' 
+  link.textContent = obj.html_url
+  link.href = obj.html_url
+  followers.textContent = 'Followers: ' + obj.followers
+  following.textContent = 'Following: ' + obj.following
+  bio.textContent = `Bio: ${obj.bio}`
+  // need to figure out what to do if this value is null
+
+   //appends
+   cardi.append(img)
+   cardi.append(cardInfo)
+   cardInfo.append(name)
+   cardInfo.append(username)
+   cardInfo.append(location)
+   cardInfo.append(profile)
+   profile.append(link)
+   cardInfo.append(followers)
+   cardInfo.append(following)
+   cardInfo.append(bio)
+  return cardi
+}
 
 /* List of LS Instructors Github username's: 
   tetondan
